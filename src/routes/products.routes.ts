@@ -43,6 +43,29 @@ productRouter.get(
   },
 );
 
+productRouter.get(
+  "/:id",
+  async (req: Request<{ id: string }>, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid product ID format" });
+      }
+
+      const product = await Activity.findById(id).lean();
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json(product);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message || "Internal Server Error" });
+    }
+  },
+);
+
 // Add a POST route to create new activities (supports both single object and bulk array)
 productRouter.post("/", async (req: Request, res: Response) => {
   try {
