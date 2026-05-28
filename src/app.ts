@@ -60,15 +60,20 @@ app.use(express.json());
 // Routes
 app.use("/api/products", productRouter);
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
-    .then(() => {
+// Connect to MongoDB and start the server
+const startServer = async () => {
+    try {
+        await mongoose.connect(MONGODB_URI);
         console.log("Successfully connected to MongoDB");
+
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
-    })
-    .catch((err) => {
+    } catch (err) {
         console.error("Database connection error:", err);
-    });
+        process.exit(1); // Stop the process if the DB fails
+    }
+};
+
+startServer();
 

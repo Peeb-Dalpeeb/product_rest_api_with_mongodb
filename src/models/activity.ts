@@ -1,31 +1,23 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import { Schema, model } from "mongoose";
 
-export interface IActivity extends Document {
-   id: string,
-   name: string,
-   age: number,
+export interface IActivity {
+    name: string;
+    age?: number; // Aligned with 'required: false' in schema
 }
 
-const ActivitySchema: Schema<IActivity> = new mongoose.Schema({
-   id: {
-    type: String,
-    required: true,
-    unique: true
-   },
-
-   name: {
-    type: String,
-    required: true,
-   },
-
-   age: {
-    type: Number,
-    required: false,
-   }
-   }, {
+const ActivitySchema = new Schema<IActivity>({
+    name: {
+        type: String,
+        required: true,
+    },
+    age: {
+        type: Number,
+        required: false,
+    }
+}, {
     timestamps: true,
 });
 
-const Activity = mongoose.model<IActivity>("Activity", ActivitySchema, "collection");
+const Activity = model<IActivity>("Activity", ActivitySchema);
 
 export default Activity;
